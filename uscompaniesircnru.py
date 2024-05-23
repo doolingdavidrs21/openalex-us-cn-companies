@@ -18,7 +18,7 @@ import pydeck as pdk
 import os
 #from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
-from langchain import PromptTemplate
+from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from itertools import combinations
