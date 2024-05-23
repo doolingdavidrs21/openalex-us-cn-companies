@@ -1,5 +1,5 @@
 altair==5.3.0
-langchain==0.2.1
+langchain==0.0.352
 networkx==3.2.1
 openai==1.6.0
 pandas==1.5.3
