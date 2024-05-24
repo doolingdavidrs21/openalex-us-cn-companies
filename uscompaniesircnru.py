@@ -17,13 +17,19 @@ import pickle
 import pydeck as pdk
 import os
 #from langchain.llms import OpenAI
-#from langchain.chat_models import ChatOpenAI
-from langchain_openai import ChatOpenAI
-from langchain.prompts import PromptTemplate
+from langchain.chat_models import ChatOpenAI
+#from langchain_openai import ChatOpenAI
+#from langchain.prompts import PromptTemplate
+
 from langchain.chains import LLMChain
+#from langchain import RunnableSequence
+#from langchain.chains import RunnableSequence
+from langchain import PromptTemplate
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from itertools import combinations
 from pydeck.types import String
+import warnings
+warnings.filterwarnings('ignore')
 
 # file://wsl.localhost/Ubuntu-22.04/home/davidd/2023/openalex-jamming-gpt4/updatechart.html
 
@@ -74,7 +80,7 @@ prompt_article = PromptTemplate(
 
 
 chain_article = LLMChain(llm=llm, prompt=prompt_article)
-
+#chain_article = llm | prompt_article
 
 def get_article_llm_description(title:str, abstract:str, authors:list, affils:list):
     """
@@ -83,6 +89,9 @@ def get_article_llm_description(title:str, abstract:str, authors:list, affils:li
     """
     authors = "; ".join(authors)
     affils = "; ".join(affils)
+ #   return chain_article.invoke(article_title=title,article_abstract=abstract,
+ #                          author_list=authors, affiliation_list=affils )
+
     return chain_article.run(article_title=title,article_abstract=abstract,
                            author_list=authors, affiliation_list=affils )
 
@@ -109,7 +118,7 @@ prompt_topic = PromptTemplate(
 )
 
 chain_topic= LLMChain(llm=llm, prompt=prompt_topic)
-
+#chain_topic = RunnableSequence(llm=llm, prompt=prompt_topic)
 
 
 def get_topic_llm_description(key_phrases:list):
@@ -133,7 +142,7 @@ pio.templates.default = "plotly_dark"
 st.set_page_config(layout='wide')
 
 st.markdown("""
-A sample of recent papers US-based companies collaborating with CN, IR, RU affiliations.
+A sample of recent papers US-based companies collaborating with CN, IR, and RU affiliations.
 """)
 
 st.write("Topic modeling")
@@ -1065,6 +1074,11 @@ with tab9:
         #layers = [sp_layer],
         tooltip = {
             "html": "<b>{display_name}</b> <br/> <b>Strength</b>: {paper_cluster_score} <br>" + \
-            "<b>source: {source} <br/> <b>target</b> {target}"
+            "<b>source: {source} <br/> <b>target</b> {target} <br>" + \
+            "<b>count: {count} <br/>",
+            "style": {
+                "backgroundColor": "white",
+                "color": "black"
+            }
         }
     ))
